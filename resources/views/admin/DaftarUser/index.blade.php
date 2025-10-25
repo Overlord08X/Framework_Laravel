@@ -1,6 +1,6 @@
 @extends('site.layouts.app')
 
-@section('title', 'Daftar User)
+@section('title', 'Daftar User')
 
 @section('content')
 <table border="1" cellpadding="8" cellspacing="0">
