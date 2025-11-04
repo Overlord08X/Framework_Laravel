@@ -28,11 +28,6 @@ class SiteController extends Controller
         return view('site.visimisi');
     }
 
-    public function login()
-    {
-        return view('site.login');
-    }
-
     public function cekKoneksi()
     {
         try {

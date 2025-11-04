@@ -1,4 +1,4 @@
-@extends('site.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Daftar Kode Tindakan Terapi')
 

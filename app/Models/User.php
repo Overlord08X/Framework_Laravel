@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use PhpParser\Node\Expr\FuncCall;
+use App\Models\RoleUser;
 
 class User extends Authenticatable
 {
@@ -20,6 +21,8 @@ class User extends Authenticatable
      */
     protected $table = 'user';
     protected $primaryKey = 'iduser';
+    public $timestamps = false;
+
     protected $fillable = [
         'name',
         'email',
@@ -47,5 +50,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function pemilik()
+    {
+        return $this->hasOne(Pemilik::class, 'iduser', 'iduser');
+    }
+
+    public function roleUser()
+    {
+        return $this->hasMany(RoleUser::class, 'iduser', 'iduser');
     }
 }
