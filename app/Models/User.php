@@ -6,7 +6,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use PhpParser\Node\Expr\FuncCall;
 use App\Models\RoleUser;
 
 class User extends Authenticatable
@@ -24,7 +23,7 @@ class User extends Authenticatable
     public $timestamps = false;
 
     protected $fillable = [
-        'name',
+        'nama',
         'email',
         'password',
     ];
@@ -51,14 +50,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
-    public function pemilik()
-    {
-        return $this->hasOne(Pemilik::class, 'iduser', 'iduser');
-    }
-
+    
     public function roleUser()
     {
-        return $this->hasMany(RoleUser::class, 'iduser', 'iduser');
+        return $this->belongsToMany(
+            Role::class,    // Model tujuan
+            'role_user',    // Pivot table
+            'iduser',       // FK di pivot yang mengarah ke user
+            'idrole'        // FK di pivot yang mengarah ke role
+        );
     }
 }

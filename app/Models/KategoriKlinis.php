@@ -10,6 +10,8 @@ class KategoriKlinis extends Model
     protected $primaryKey = 'idkategori_klinis';
     protected $fillable = ['nama_kategori_klinis'];
 
+    public $timestamps = false;
+
     public function Kategori()
     {
         return $this->belongsTo(Kategori::class, 'idkategori', 'idkategori');
