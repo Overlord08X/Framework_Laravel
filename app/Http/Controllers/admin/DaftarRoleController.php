@@ -4,13 +4,15 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Role;
+use Illuminate\Support\Facades\DB;
 
 class DaftarRoleController extends Controller
 {
     public function index()
     {
-        $Role = Role::all();
+        // Ambil semua role pakai Query Builder
+        $Role = DB::table('role')->get();
+
         return view('admin.DaftarRole.index', compact('Role'));
     }
 
@@ -23,8 +25,8 @@ class DaftarRoleController extends Controller
     {
         $validatedData = $this->validateRole($request);
 
-        Role::create([
-            'nama_role' => trim($validatedData['nama_role']),
+        DB::table('role')->insert([
+            'nama_role' => trim($validatedData['nama_role'])
         ]);
 
         return redirect()->route('admin.DaftarRole.index')
@@ -33,7 +35,12 @@ class DaftarRoleController extends Controller
 
     public function edit($id)
     {
-        $role = Role::findOrFail($id);
+        $role = DB::table('role')->where('idrole', $id)->first();
+
+        if (!$role) {
+            abort(404);
+        }
+
         return view('admin.DaftarRole.edit', compact('role'));
     }
 
@@ -41,10 +48,11 @@ class DaftarRoleController extends Controller
     {
         $validatedData = $this->validateRole($request);
 
-        $role = Role::findOrFail($id);
-        $role->update([
-            'nama_role' => trim($validatedData['nama_role']),
-        ]);
+        DB::table('role')
+            ->where('idrole', $id)
+            ->update([
+                'nama_role' => trim($validatedData['nama_role']),
+            ]);
 
         return redirect()->route('admin.DaftarRole.index')
             ->with('success', 'Data Role berhasil diperbarui.');
@@ -52,13 +60,13 @@ class DaftarRoleController extends Controller
 
     public function destroy($id)
     {
-        $role = Role::findOrFail($id);
-        $role->delete();
+        DB::table('role')->where('idrole', $id)->delete();
 
         return redirect()->route('admin.DaftarRole.index')
             ->with('success', 'Data Role berhasil dihapus.');
     }
 
+    // Helper Validasi
     protected function validateRole(Request $request)
     {
         return $request->validate([

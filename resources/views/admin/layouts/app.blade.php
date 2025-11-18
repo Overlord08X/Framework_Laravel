@@ -1,11 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="id">
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@yield('title') · Dashboard RSHP Unair</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+    <meta name="support-color-scheme" content="light dark" />
+    <!-- <title>@yield('title') · Dashboard RSHP Unair</title> -->
+    <link rel="preload" href="{{ asset('assets/css/adminlte.css') }}" />
 </head>
 
 <body>

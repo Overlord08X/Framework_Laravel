@@ -5,13 +5,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@yield('title') · RSHP Unair</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
 </head>
 
 <body>
     <div class="navbar">
         <div class="logo">
-            <img src="{{ asset('css/aset/logo.png') }}" alt="Logo RSHP" />
+            <img src="{{ asset('assets/img/logo.png') }}" alt="Logo RSHP" />
         </div>
         <div class="menu">
             <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a>

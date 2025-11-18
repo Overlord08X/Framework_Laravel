@@ -4,13 +4,21 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\JenisHewan;
+use Illuminate\Support\Facades\DB;
 
 class DaftarJenisHewanController extends Controller
 {
     public function index()
     {
-        $JenisHewan = JenisHewan::all();
+        // Eloquent
+        // $JenisHewan = JenisHewan::all();
+        // return view('admin.DaftarJenisHewan.index', compact('JenisHewan'));
+
+        // Query Builder
+        $JenisHewan = DB::table('jenis_hewan')
+            ->select('idjenis_hewan', 'nama_jenis_hewan')
+            ->get();
+
         return view('admin.DaftarJenisHewan.index', compact('JenisHewan'));
     }
 
@@ -25,7 +33,11 @@ class DaftarJenisHewanController extends Controller
         $validatedData = $this->validateJenisHewan($request);
 
         // Helper untuk menyimpan data
-        $jenisHewan = $this->createJenisHewan($validatedData);
+        // $jenisHewan = $this->createJenisHewan($validatedData);
+
+        DB::table('jenis_hewan')->insert([
+            'nama_jenis_hewan' => $this->formatNamaJenisHewan($validatedData['nama_jenis_hewan']),
+        ]);
 
         return redirect()->route('admin.DaftarJenisHewan.index')
             ->with('success', 'Data berhasil disimpan');
@@ -33,18 +45,31 @@ class DaftarJenisHewanController extends Controller
 
     public function edit($id)
     {
-        $jenisHewan = JenisHewan::findOrFail($id);
-        return view('admin.DaftarJenisHewan.edit', compact('jenisHewan'));
+        // Eloquent
+        // $jenisHewan = JenisHewan::findOrFail($id);
+
+        $JenisHewan = DB::table('jenis_hewan')
+            ->where('idjenis_hewan', $id)
+            ->first();
+
+        return view('admin.DaftarJenisHewan.edit', compact('JenisHewan'));
     }
 
     public function update(Request $request, $id)
     {
         $validatedData = $this->validateJenisHewan($request, $id);
 
-        $jenisHewan = JenisHewan::findOrFail($id);
-        $jenisHewan->update([
-            'nama_jenis_hewan' => $this->formatNamaJenisHewan($validatedData['nama_jenis_hewan']),
-        ]);
+        // Eloquent
+        // $jenisHewan = JenisHewan::findOrFail($id);
+        // $jenisHewan->update([
+        //     'nama_jenis_hewan' => $this->formatNamaJenisHewan($validatedData['nama_jenis_hewan']),
+        // ]);
+
+        DB::table('jenis_hewan')
+            ->where('idjenis_hewan', $id)
+            ->update([
+                'nama_jenis_hewan' => $this->formatNamaJenisHewan($validatedData['nama_jenis_hewan']),
+            ]);
 
         return redirect()->route('admin.DaftarJenisHewan.index')
             ->with('success', 'Data berhasil diperbarui.');
@@ -52,8 +77,13 @@ class DaftarJenisHewanController extends Controller
 
     public function destroy($id)
     {
-        $jenisHewan = JenisHewan::findOrFail($id);
-        $jenisHewan->delete();
+        // Eloquent
+        // $jenisHewan = JenisHewan::findOrFail($id);
+        // $jenisHewan->delete();
+
+        DB::table('jenis_hewan')
+            ->where('idjenis_hewan', $id)
+            ->delete();
 
         return redirect()->route('admin.DaftarJenisHewan.index')
             ->with('success', 'Data berhasil dihapus.');
@@ -88,9 +118,17 @@ class DaftarJenisHewanController extends Controller
     protected function createJenisHewan(array $data)
     {
         try {
-            return JenisHewan::create([
+            // Eloquent
+            // return JenisHewan::create([
+            //     'nama_jenis_hewan' => $this->formatNamaJenisHewan($data['nama_jenis_hewan']),
+            // ]);
+
+            // Query Builder
+            $jenisHewan = DB::table('jenis_hewan')->insert([
                 'nama_jenis_hewan' => $this->formatNamaJenisHewan($data['nama_jenis_hewan']),
             ]);
+
+            return $jenisHewan;
         } catch (\Exception $e) {
             throw new \Exception('Gagal menyimpan data jenis hewan:' . $e->getMessage());
         }

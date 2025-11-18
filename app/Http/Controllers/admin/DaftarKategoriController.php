@@ -4,13 +4,21 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Kategori;
+use Illuminate\Support\Facades\DB;
 
 class DaftarKategoriController extends Controller
 {
     public function index()
     {
-        $Kategori = Kategori::all();
+        // Eloquent
+        // $Kategori = Kategori::all();
+        // return view('admin.DaftarKategori.index', compact('Kategori'));
+
+        // Query Builder
+        $Kategori = DB::table('kategori')
+            ->select('idkategori', 'nama_kategori')
+            ->get();
+
         return view('admin.DaftarKategori.index', compact('Kategori'));
     }
 
@@ -21,13 +29,14 @@ class DaftarKategoriController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nama_kategori' => 'required|string|max:255',
-        ]);
+        $data = $this->validateKategori($request);
 
-        Kategori::create([
-            'nama_kategori' => $request->nama_kategori,
-        ]);
+        // Eloquent
+        // Kategori::create([
+        //     'nama_kategori' => $request->nama_kategori,
+        // ]);
+
+        $this->createKategori($data);
 
         return redirect()->route('admin.DaftarKategori.index')
             ->with('success', 'Kategori berhasil ditambahkan.');
@@ -35,20 +44,25 @@ class DaftarKategoriController extends Controller
 
     public function edit($id)
     {
-        $kategori = Kategori::findOrFail($id);
+        // Eloquent
+        // $kategori = Kategori::findOrFail($id);
+
+        $kategori = $this->editKategori($id);
+
         return view('admin.DaftarKategori.edit', compact('kategori'));
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'nama_kategori' => 'required|string|max:255',
-        ]);
+        $data = $this->validateKategori($request);
 
-        $kategori = Kategori::findOrFail($id);
-        $kategori->update([
-            'nama_kategori' => $request->nama_kategori,
-        ]);
+        // Eloquent
+        // $kategori = Kategori::findOrFail($id);
+        // $kategori->update([
+        //     'nama_kategori' => $request->nama_kategori,
+        // ]);
+
+        $this->updateKategori($id, $data);
 
         return redirect()->route('admin.DaftarKategori.index')
             ->with('success', 'Kategori berhasil diperbarui.');
@@ -56,10 +70,54 @@ class DaftarKategoriController extends Controller
 
     public function destroy($id)
     {
-        $kategori = Kategori::findOrFail($id);
-        $kategori->delete();
+        // Eloquent
+        // $kategori = Kategori::findOrFail($id);
+        // $kategori->delete();
+
+        $this->deleteKategori($id);
 
         return redirect()->route('admin.DaftarKategori.index')
             ->with('success', 'Kategori berhasil dihapus.');
+    }
+
+    // Helper
+    protected function validateKategori(Request $request)
+    {
+        return $request->validate([
+            'nama_kategori' => 'required|string|max:255',
+        ]);
+    }
+
+    protected function formatNama($nama)
+    {
+        return trim(ucwords(strtolower($nama)));  // title case
+    }
+
+    protected function createKategori(array $data)
+    {
+        return DB::table('kategori')->insert([
+            'nama_kategori' => $this->formatNama($data['nama_kategori']),
+        ]);
+    }
+
+    protected function editKategori($id)
+    {
+        return DB::table('kategori')->where('idkategori', $id)->first();
+    }
+
+    protected function updateKategori($id, array $data)
+    {
+        return DB::table('kategori')
+            ->where('idkategori', $id)
+            ->update([
+                'nama_kategori' => $this->formatNama($data['nama_kategori']),
+            ]);
+    }
+
+    protected function deleteKategori($id)
+    {
+        return DB::table('kategori')
+            ->where('idkategori', $id)
+            ->delete();
     }
 }

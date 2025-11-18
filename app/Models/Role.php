@@ -21,4 +21,9 @@ class Role extends Model
             'iduser'    // FK pivot ke user
         );
     }
+
+    public function roleUser()
+    {
+        return $this->hasMany(RoleUser::class, 'idrole', 'idrole');
+    }
 }

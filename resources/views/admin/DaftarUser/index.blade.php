@@ -7,7 +7,8 @@
 <div class="mb-3">
     <form action="{{ route('admin.DaftarUser.create') }}" method="GET" style="display: inline;">
         <button type="submit" class="btn btn-primary">
-        <i class="fas fa-plus"></i> Tambah User
+            <i class="fas fa-plus"></i> Tambah User
+        </button>
     </form>
 </div>
 
@@ -22,21 +23,17 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($User as $index => $user)
+        @foreach ($User as $index => $item)
         <tr>
             <td>{{ $index + 1 }}</td>
-            <td>{{ $user->nama }}</td>
-            <td>{{ $user->email }}</td>
+            <td>{{ $item->nama }}</td>
+            <td>{{ $item->email }}</td>
+            <td>{{ $item->roles ?? '-' }}</td>
             <td>
-                @foreach ($user->roleUser as $role)
-                    {{ $role->nama_role }}
-                @endforeach
-            </td>
-            <td>
-                <a href="{{ route('admin.DaftarUser.edit', $user->iduser) }}" class="btn btn-sm btn-warning">
+                <a href="{{ route('admin.DaftarUser.edit', $item->iduser) }}" class="btn btn-sm btn-warning">
                     <i class="fas fa-edit"></i> Edit
                 </a>
-                <form action="{{ route('admin.DaftarUser.destroy', $user->iduser) }}" method="POST" style="display:inline;">
+                <form action="{{ route('admin.DaftarUser.destroy', $item->iduser) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus user ini?')">

@@ -27,23 +27,31 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($Pet as $index => $pet)
+        @foreach ($pet as $index => $row)
         <tr>
             <td>{{ $index + 1 }}</td>
-            <td>{{ $pet->nama }}</td>
-            <td>{{ $pet->tanggal_lahir }}</td>
-            <td>{{ $pet->warna_tanda }}</td>
-            <td>{{ $pet->jenis_kelamin == 'M' ? 'Jantan' : 'Betina' }}</td>
-            <td>{{ $pet->pemilik->user->nama }}</td>
-            <td>{{ $pet->rashewan->nama_ras }}</td>
-            <td>{{ $pet->rashewan->jenishewan->nama_jenis_hewan }}</td>
+            <td>{{ $row->nama }}</td>
+            <td>{{ $row->tanggal_lahir }}</td>
+            <td>{{ $row->warna_tanda }}</td>
+            <td>{{ $row->jenis_kelamin == 'M' ? 'Jantan' : 'Betina' }}</td>
+
+            {{-- dari SELECT user.nama as nama_pemilik --}}
+            <td>{{ $row->nama_pemilik }}</td>
+
+            {{-- dari SELECT ras_hewan.nama_ras --}}
+            <td>{{ $row->nama_ras }}</td>
+
+            {{-- dari SELECT jenis_hewan.nama_jenis_hewan --}}
+            <td>{{ $row->nama_jenis_hewan }}</td>
+
             <td>
-                <form action="{{ route('admin.DaftarPet.edit', $pet->idpet) }}" method="GET" style="display:inline;">
+                <form action="{{ route('admin.DaftarPet.edit', $row->idpet) }}" method="GET" style="display:inline;">
                     <button type="submit" class="btn btn-sm btn-warning">
                         <i class="fas fa-edit"></i> Edit
                     </button>
                 </form>
-                <form action="{{ route('admin.DaftarPet.destroy', $pet->idpet) }}" method="POST" style="display:inline;">
+
+                <form action="{{ route('admin.DaftarPet.destroy', $row->idpet) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-sm btn-danger"

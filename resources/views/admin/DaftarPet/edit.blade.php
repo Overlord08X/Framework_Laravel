@@ -42,7 +42,7 @@
                 @foreach ($Pemilik as $pemilik)
                 <option value="{{ $pemilik->idpemilik }}"
                     {{ old('idpemilik', $pet->idpemilik) == $pemilik->idpemilik ? 'selected' : '' }}>
-                    {{ $pemilik->user->nama }}
+                    {{ $pemilik->nama }}
                 </option>
                 @endforeach
             </select>
@@ -54,7 +54,7 @@
                 @foreach ($RasHewan as $ras)
                 <option value="{{ $ras->idras_hewan }}"
                     {{ old('idras_hewan', $pet->idras_hewan) == $ras->idras_hewan ? 'selected' : '' }}>
-                    {{ $ras->nama_ras }} ({{ $ras->jenishewan->nama_jenis_hewan }})
+                    {{ $ras->nama_ras }} ({{ $ras->nama_jenis_hewan }})
                 </option>
                 @endforeach
             </select>

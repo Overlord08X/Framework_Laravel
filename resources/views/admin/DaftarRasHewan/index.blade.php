@@ -26,7 +26,7 @@
         <tr>
             <td>{{ $index + 1 }}</td>
             <td>{{ $ras->nama_ras }}</td>
-            <td>{{ $ras->jenishewan->nama_jenis_hewan }}</td>
+            <td>{{ $ras->nama_jenis_hewan }}</td> {{-- FIX --}}
             <td>
                 <form action="{{ route('admin.DaftarRasHewan.edit', $ras->idras_hewan) }}" method="GET" style="display:inline;">
                     <button type="submit" class="btn btn-sm btn-warning">

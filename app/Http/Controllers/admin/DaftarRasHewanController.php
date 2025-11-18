@@ -4,30 +4,38 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\RasHewan;
-use App\Models\JenisHewan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 
 class DaftarRasHewanController extends Controller
 {
     public function index()
     {
-        $RasHewan = RasHewan::all();
+        $RasHewan = DB::table('ras_hewan')
+            ->join('jenis_hewan', 'jenis_hewan.idjenis_hewan', '=', 'ras_hewan.idjenis_hewan')
+            ->select('ras_hewan.*', 'jenis_hewan.nama_jenis_hewan')
+            ->orderBy('ras_hewan.idras_hewan', 'DESC')
+            ->get();
+
         return view('admin.DaftarRasHewan.index', compact('RasHewan'));
     }
 
     public function create()
     {
-        $JenisHewan = JenisHewan::all();
+        $JenisHewan = DB::table('jenis_hewan')
+            ->orderBy('nama_jenis_hewan')
+            ->get();
+
         return view('admin.DaftarRasHewan.create', compact('JenisHewan'));
     }
 
     public function store(Request $request)
     {
-        $validatedData = $this->validateRasHewan($request);
+        $validated = $this->validateRasHewan($request);
 
-        RasHewan::create([
-            'nama_ras' => trim($validatedData['nama_ras']),
-            'idjenis_hewan' => $validatedData['idjenis_hewan'],
+        DB::table('ras_hewan')->insert([
+            'nama_ras'      => trim($validated['nama_ras']),
+            'idjenis_hewan' => $validated['idjenis_hewan'],
         ]);
 
         return redirect()->route('admin.DaftarRasHewan.index')
@@ -36,20 +44,29 @@ class DaftarRasHewanController extends Controller
 
     public function edit($id)
     {
-        $rashewan = RasHewan::findOrFail($id);
-        $JenisHewan = JenisHewan::all();
+        $rashewan = DB::table('ras_hewan')->where('idras_hewan', $id)->first();
+
+        if (!$rashewan) {
+            abort(404);
+        }
+
+        $JenisHewan = DB::table('jenis_hewan')
+            ->orderBy('nama_jenis_hewan')
+            ->get();
+
         return view('admin.DaftarRasHewan.edit', compact('rashewan', 'JenisHewan'));
     }
 
     public function update(Request $request, $id)
     {
-        $validatedData = $this->validateRasHewan($request);
+        $validated = $this->validateRasHewan($request);
 
-        $rashewan = RasHewan::findOrFail($id);
-        $rashewan->update([
-            'nama_ras' => trim($validatedData['nama_ras']),
-            'idjenis_hewan' => $validatedData['idjenis_hewan'],
-        ]);
+        DB::table('ras_hewan')
+            ->where('idras_hewan', $id)
+            ->update([
+                'nama_ras'      => trim($validated['nama_ras']),
+                'idjenis_hewan' => $validated['idjenis_hewan'],
+            ]);
 
         return redirect()->route('admin.DaftarRasHewan.index')
             ->with('success', 'Data Ras Hewan berhasil diperbarui.');
@@ -57,13 +74,14 @@ class DaftarRasHewanController extends Controller
 
     public function destroy($id)
     {
-        $rashewan = RasHewan::findOrFail($id);
-        $rashewan->delete();
+        DB::table('ras_hewan')->where('idras_hewan', $id)->delete();
 
         return redirect()->route('admin.DaftarRasHewan.index')
             ->with('success', 'Data Ras Hewan berhasil dihapus.');
     }
 
+
+    // Helper
     protected function validateRasHewan(Request $request)
     {
         return $request->validate([
