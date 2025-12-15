@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('admin.layouts.lte.main')
 
 @section('title', 'Daftar Ras Hewan')
 
