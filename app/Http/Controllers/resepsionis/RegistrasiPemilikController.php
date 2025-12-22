@@ -9,9 +9,8 @@ use Illuminate\Support\Facades\Hash;
 
 class RegistrasiPemilikController extends Controller
 {
-        /**
+    /**
      * TAMPILKAN FORM REGISTRASI
-     * GET /resepsionis/RegistrasiPemilik
      */
     public function index()
     {
@@ -20,7 +19,6 @@ class RegistrasiPemilikController extends Controller
 
     /**
      * SIMPAN DATA
-     * POST /resepsionis/RegistrasiPemilik
      */
     public function store(Request $request)
     {
@@ -37,12 +35,21 @@ class RegistrasiPemilikController extends Controller
         DB::beginTransaction();
 
         try {
+            // 1️⃣ INSERT USER
             $iduser = DB::table('user')->insertGetId([
                 'nama'     => $validated['nama'],
                 'email'    => $validated['email'],
                 'password' => Hash::make($validated['password']),
             ]);
 
+            // 2️⃣ SET ROLE DEFAULT = PEMILIK (idrole = 6)
+            DB::table('role_user')->insert([
+                'iduser' => $iduser,
+                'idrole' => 6,
+                'status' => 1,
+            ]);
+
+            // 3️⃣ INSERT DATA PEMILIK
             DB::table('pemilik')->insert([
                 'iduser' => $iduser,
                 'no_wa'  => $noWa,
@@ -52,7 +59,7 @@ class RegistrasiPemilikController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('resepsionis.dashboard')
+                ->route('resepsionis.RegistrasiPemilik.index')
                 ->with('success', 'Registrasi pemilik berhasil');
 
         } catch (\Throwable $e) {

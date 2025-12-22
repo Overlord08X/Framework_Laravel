@@ -20,8 +20,6 @@
                 <th>No. Urut</th>
                 <th>Nama Pasien</th>
                 <th>Pemilik</th>
-                <th>Dokter</th>
-                <th>Status Rekam Medis</th>
             </tr>
         </thead>
         <tbody>
@@ -30,10 +28,6 @@
                     <td>{{ $row->no_urut }}</td>
                     <td>{{ $row->nama_pet }}</td>
                     <td>{{ $row->nama_pemilik }}</td>
-                    <td>{{ $row->nama_dokter }}</td>
-                    <td>
-                        {{ $row->idrekam_medis ? 'Sudah Dibuat' : 'Belum Dibuat' }}
-                    </td>
                 </tr>
             @empty
                 <tr>

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class TemuDokterController extends Controller
 {
-        /**
+    /**
      * HALAMAN TEMU DOKTER
      */
     public function index()
@@ -91,7 +91,7 @@ class TemuDokterController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('resepsionis.temu-dokter.index')
+                ->route('resepsionis.TemuDokter.index')
                 ->with('success', 'Berhasil daftar temu dokter.');
 
         } catch (\Throwable $e) {

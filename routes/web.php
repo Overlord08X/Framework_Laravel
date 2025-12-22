@@ -124,7 +124,7 @@ Route::middleware('isPerawat')->group(function () {
     Route::get('/perawat/Reservasi', [ReservasiController::class, 'index'])->name('perawat.Reservasi.index');
 
     Route::get('/perawat/RekamMedis', [RekamMedisPerawatController::class, 'index'])->name('perawat.RekamMedis.index');
-    Route::get('/perawat/RekamMedis/store', [RekamMedisPerawatController::class, 'store'])->name('perawat.RekamMedis.store');
+    Route::post('/perawat/RekamMedis/store', [RekamMedisPerawatController::class, 'store'])->name('perawat.RekamMedis.store');
     Route::get('/perawat/RekamMedis/{id}', [RekamMedisPerawatController::class, 'show'])->name('perawat.RekamMedis.show');
 });
 
@@ -140,8 +140,8 @@ Route::middleware('isResepsionis')->group(function () {
     Route::post('/resepsionis/RegistrasiPet/store', [RegistrasiPetController::class,'store'])->name('resepsionis.RegistrasiPet.store');
 
     Route::get('/resepsionis/TemuDokter', [TemuDokterController::class,'index'])->name('resepsionis.TemuDokter.index');
-    Route::post('/resepsionis/TemuDokter/create', [TemuDokterController::class,'create'])->name('resepsionis.TemuDokter.create');
-    Route::get('/resepsionis/TemuDokter/store', [TemuDokterController::class,'store'])->name('resepsionis.TemuDokter.store');
+    Route::get('/resepsionis/TemuDokter/create', [TemuDokterController::class,'create'])->name('resepsionis.TemuDokter.create');
+    Route::post('/resepsionis/TemuDokter/store', [TemuDokterController::class,'store'])->name('resepsionis.TemuDokter.store');
 });
 
 Route::middleware('isDokter')->group(function () {
